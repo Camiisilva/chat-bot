@@ -110,6 +110,7 @@
     }
     .skip-btn:hover { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
+    /* Card do Chat com Overflow Visible para Mostrar o Eevee Inteiro */
     .chat-card {
       width: 100%; max-width: 900px; height: calc(100vh - 40px); max-height: 850px;
       background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -172,40 +173,14 @@
     .typing-dot:nth-child(2) { animation-delay: -0.16s; }
     @keyframes dotBounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
 
-    /* Botões de Sugestão (Quick Prompts) em 2 Linhas Quebradas Sem Barras */
-    .quick-prompts-container {
-      padding: 0 24px 14px 24px !important;
-      display: flex !important;
-      flex-wrap: wrap !important;
-      gap: 8px 10px !important;
-      justify-content: center !important;
-      overflow: visible !important;
-    }
+    .quick-prompts-container { padding: 0 24px 12px 24px; display: flex; gap: 8px; overflow-x: auto !important; scroll-behavior: smooth; }
+    .quick-prompts-container::-webkit-scrollbar { height: 4px; }
+    .quick-prompts-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+    
+    .prompt-chip { background: rgba(60, 36, 86, 0.65); border: 1.5px solid rgba(196, 181, 253, 0.2); color: var(--text-lavender-muted); padding: 8px 16px; border-radius: 9999px; font-size: 0.83rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .prompt-chip:hover { background: rgba(139, 92, 246, 0.3); border-color: rgba(196, 181, 253, 0.5); color: #ffffff; transform: translateY(-2px); }
 
-    .prompt-chip {
-      background: rgba(60, 36, 86, 0.45) !important;
-      border: 1px solid rgba(139, 92, 246, 0.3) !important;
-      color: var(--text-lavender-muted) !important;
-      padding: 8px 16px !important;
-      border-radius: 20px !important;
-      font-size: 0.84rem !important;
-      font-weight: 500 !important;
-      white-space: normal !important;
-      cursor: pointer !important;
-      transition: all 0.2s ease !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      flex-shrink: 0 !important;
-    }
-    .prompt-chip:hover {
-      background: rgba(139, 92, 246, 0.25) !important;
-      border-color: rgba(196, 181, 253, 0.5) !important;
-      color: #ffffff !important;
-      transform: translateY(-2px) !important;
-    }
-
-    .chip-pokeball-icon { width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid var(--text-lavender-muted); position: relative; overflow: hidden; flex-shrink: 0; }
+    .chip-pokeball-icon { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--text-lavender-muted); position: relative; overflow: hidden; flex-shrink: 0; }
     .chip-pokeball-icon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: #ef4444; }
     .chip-pokeball-icon::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 4px; background: #fff; border-radius: 50%; border: 1px solid #1a1a1a; }
 
@@ -231,7 +206,7 @@
       .chat-header { padding: 14px 16px; border-radius: 0; }
       .chat-messages { padding: 16px; }
       .message-row { max-width: 92%; }
-      .quick-prompts-container { padding: 0 16px 10px 16px !important; }
+      .quick-prompts-container { padding: 0 16px 10px 16px; }
       .input-area { padding: 12px 16px 16px 16px; border-radius: 0; }
       .eevee-sticker-peeking { top: -28px; right: 16px; transform: scale(0.85); }
     }
