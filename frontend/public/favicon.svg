@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 36 36" fill="none">
+  <!-- Corpo Redondinho Bege Café com Leite -->
+  <circle cx="18" cy="18" r="17" fill="#ebdcd3" stroke="#4a2e26" stroke-width="1.2" />
+  
+  <!-- Asinhas Chocolate -->
+  <path d="M2 17 C1 23 5 29 10 31 C7 27 5 22 6 17 Z" fill="#4a2e26" />
+  <path d="M34 17 C35 23 31 29 26 31 C29 27 31 22 30 17 Z" fill="#4a2e26" />
+
+  <!-- Rostinho Branco -->
+  <circle cx="13" cy="15" r="6.5" fill="#ffffff" />
+  <circle cx="23" cy="15" r="6.5" fill="#ffffff" />
+  <ellipse cx="18" cy="16" rx="6" ry="5.5" fill="#ffffff" />
+
+  <!-- Gravatinha de Folha Lavanda -->
+  <path d="M16 24 C14 21 11 23 12 26 C14 27 15 25 16 24 Z" fill="#8b62db" />
+  <path d="M18 24 C20 21 23 23 22 26 C20 27 19 25 18 24 Z" fill="#c499f3" />
+
+  <!-- Olhinhos Grandes e Brilhantes -->
+  <ellipse cx="13" cy="14.5" rx="2.4" ry="3.2" fill="#241410" />
+  <circle cx="12.2" cy="13.5" r="0.9" fill="#ffffff" />
+  <ellipse cx="23" cy="14.5" rx="2.4" ry="3.2" fill="#241410" />
+  <circle cx="22.2" cy="13.5" r="0.9" fill="#ffffff" />
+
+  <!-- Biquinho Caramelo -->
+  <polygon points="17,16.5 19,16.5 18,19" fill="#e09f67" />
+
+  <!-- Bochechinhas Rosadas -->
+  <ellipse cx="9" cy="18" rx="1.8" ry="1.2" fill="rgba(244, 114, 182, 0.45)" />
+  <ellipse cx="27" cy="18" rx="1.8" ry="1.2" fill="rgba(244, 114, 182, 0.45)" />
+</svg>

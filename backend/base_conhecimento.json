@@ -1,0 +1,55 @@
+{
+  "empresa": "CamoDex ✦ Pokédex & Assistente Virtual Inteligente",
+  "descricao": "O CamoDex é um assistente virtual inteligente inspirado no conceito de Camomila + Pokédex, utilizando o mascote Rowlet como guia de jornada. Ele permite consultar dados de Pokémon, realizar registros por IA generativa e navegar através de comandos de voz em tempo real.",
+  "topicos": [
+    {
+      "id": "busca_pokemon_dados",
+      "perguntas_chave": [
+        "Como buscar dados de Pokémon no CamoDex?",
+        "Como pesquisar um Pokémon?",
+        "Quais dados o CamoDex possui sobre Pokémon?",
+        "O CamoDex é uma Pokédex?",
+        "Como usar a Pokédex por IA?"
+      ],
+      "resposta": "🔴 **Consulta de Dados na Pokédex do CamoDex:**\n\nO **CamoDex** funciona como um centro de dados de Pokédex alimentado por Inteligência Artificial! 🧠✨\n\n🔍 **Recursos de Busca e Registro:**\n* **Consulta Factual:** Digite o nome do Pokémon ou a dúvida técnica sobre tipos, habilidades e habitats.\n* **Processamento por IA:** O motor de IA generativa consulta a base de dados em tempo real para trazer estatísticas e descrições detalhadas.\n* **Comandos por Voz:** Diga o nome do Pokémon ou faça perguntas oralmente usando o microfone 🎤!"
+    },
+    {
+      "id": "registro_voz_ia",
+      "perguntas_chave": [
+        "Como funciona o registro de voz e Pokédex por IA?",
+        "Como usar o microfone na Pokédex?",
+        "Como ouvir as respostas em áudio?",
+        "Como funciona a IA Generativa do CamoDex?",
+        "Voz da Pokédex"
+      ],
+      "resposta": "🎙️ **Registro por Voz & IA Generativa CamoDex:**\n\nExperimente a interação por voz direta como uma Pokédex futurista:\n\n1. 🎤 **Entrada de Voz:** Clique no botão do microfone e fale sua dúvida sobre Pokémon ou navegação.\n2. 🧠 **Análise por IA:** O CamoDex converte a fala em texto, identifica o comando e gera uma resposta estruturada.\n3. 🔊 **Síntese de Áudio:** Clique no ícone de alto-falante em qualquer balão para ouvir a narração oficial da Pokédex em voz alta!"
+    },
+    {
+      "id": "rowlet_mascote_atributos",
+      "perguntas_chave": [
+        "Quem é o mascote Rowlet e quais são seus atributos?",
+        "Sobre o Rowlet",
+        "Por que o Rowlet é o mascote?",
+        "Atributos do Rowlet",
+        "Qual o tipo do Rowlet?"
+      ],
+      "resposta": "🦉 **Rowlet ✦ O Mascote Oficial do CamoDex:**\n\nO **Rowlet** é a corujinha curiosa e atenta que representa a jornada do CamoDex!\n\n📋 **Ficha do Mascote Pokédex:**\n* 🌿 **Tipo:** Planta / Voador (Grass / Flying)\n* 🌟 **Atributos:** Curiosidade, visão 360°, serenidade e sabedoria constante.\n* 💡 **Papel no CamoDex:** Guia principal da aplicação, simbolizando o aprendizado contínuo e a busca por respostas inteligentes!"
+    },
+    {
+      "id": "suporte_camodex",
+      "perguntas_chave": [
+        "Falar com suporte do CamoDex",
+        "Como contatar a equipe?",
+        "Preciso de ajuda na Pokédex",
+        "Atendimento do projeto"
+      ],
+      "resposta": "🛠️ **Central de Suporte do CamoDex:**\n\nPrecisa de assistência adicional ou quer enviar sugestões para o projeto?\n\n📞 **Contato:**\n* ✉️ **E-mail:** `suporte@camodex.afesu.org.br`\n* 💬 **Atendimento Humano:** Digite **'falar com atendente'** no chat para ser transferido."
+    }
+  ],
+  "faq_rapido": [
+    "Como buscar dados de Pokémon no CamoDex?",
+    "Como funciona o registro de voz e Pokédex por IA?",
+    "Quem é o mascote Rowlet e quais são seus atributos?",
+    "Falar com suporte do CamoDex"
+  ]
+}

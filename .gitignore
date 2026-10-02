@@ -1,0 +1,39 @@
+# ===================================================
+# Configurações de Segurança e GitIgnore - Chatbot
+# ===================================================
+
+# 🔒 NUNCA enviar arquivos de ambiente / credenciais para o Git
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+!.env.example
+
+# 📦 Dependências e builds do Frontend (Node.js / Vite)
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# 🐍 Backend e Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+venv/
+.venv/
+env/
+.env/
+
+# 🚀 Vercel & Logs & Editores
+.vercel
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*

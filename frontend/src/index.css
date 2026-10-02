@@ -1,0 +1,744 @@
+/* ==========================================================================
+   CamoDex ✦ — Identidade Visual Refinada (Chocolate Nobre & Lilás Soft)
+   Paleta: Chocolate Aconchegante (#3D251E / #4A2E2B) • Painel #211820 • Roxo #8B62DB
+   Arquivo: frontend/src/index.css
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ── Fundo Externo: Chocolate Aconchegante & Quente ── */
+  --bg-brown-main: #4A2E2B;
+  --bg-brown-glow: #5C382E;
+
+  /* ── Painel Central do Chatbot (Chocolate Nobre) ── */
+  --card-bg: #211820;
+  --card-header-bg: #211820;
+  --card-border: #3E2B3C;
+  --card-border-light: #52384F;
+  --card-inner-bg: #181217;
+
+  /* ── Balões de Conversa ── */
+  --bot-bubble-bg: #2B1F28;
+  --bot-bubble-border: #402F3C;
+  --bot-bubble-text: #F8F0FA;
+  --user-bubble-bg: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+  --user-bubble-text: #FFFFFF;
+
+  /* ── Chips & Badges ── */
+  --chip-bg: #291F27;
+  --chip-border: #463443;
+  --chip-text: #F4E8FA;
+
+  /* ── Acentos Roxo/Lilás ── */
+  --accent-purple: #8B62DB;
+  --accent-purple-dark: #7C3AED;
+  --accent-purple-light: #C499F3;
+
+  /* ── Tipografia ── */
+  --font-display: 'Fredoka', 'Quicksand', sans-serif;
+  --font-body: 'Quicksand', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* ── Utilitários ── */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  --shadow-window: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 35px rgba(139, 98, 219, 0.15);
+}
+
+/* Reset Global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-brown-main);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: var(--bg-brown-main);
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(92, 56, 46, 0.85) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(61, 37, 30, 0.7) 0%, transparent 60%);
+  overflow: hidden;
+}
+
+/* Vinheta Aconchegante */
+#root::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 50%, rgba(35, 20, 15, 0.4) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   🌀 Background de Pokéballs & Ambiente Aconchegante (Organizado & Fofo)
+   ========================================================================== */
+
+.pokedex-background-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.bg-item, .ambient-decor {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🎡 Animação Clássica de Captura: Wobble / Shake (Balanço -15° a 15°) */
+@keyframes pokeballCaptureShakeWobble {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  12% { transform: rotate(-15deg) scale(1.05); }
+  24% { transform: rotate(15deg) scale(1.05); }
+  36% { transform: rotate(-10deg) scale(1.02); }
+  48% { transform: rotate(10deg) scale(1.02); }
+  60% { transform: rotate(-4deg) scale(1); }
+  72% { transform: rotate(4deg) scale(1); }
+}
+
+.anim-shake-1 { animation: pokeballCaptureShakeWobble 3.2s ease-in-out infinite; }
+.anim-shake-2 { animation: pokeballCaptureShakeWobble 3.8s ease-in-out 1.2s infinite; }
+.anim-shake-3 { animation: pokeballCaptureShakeWobble 4.4s ease-in-out 2.2s infinite; }
+
+/* 📌 Posições das Pokébolas Organizadas no Entorno */
+.pos-top-left-pokeball { top: 35px; left: 45px; }
+.pos-top-mid-pokeball { top: 25px; left: 48%; }
+.pos-top-right-pokeball { top: 35px; right: 45px; }
+
+.pos-mid-left-pokeball { top: 48%; left: 35px; }
+.pos-mid-right-pokeball { top: 48%; right: 35px; }
+
+.pos-bot-left-pokeball { bottom: 35px; left: 45px; }
+.pos-bot-right-pokeball { bottom: 35px; right: 45px; }
+
+/* 📌 Elementos Decorativos da Sala (Post-it, Livros, Pikachu, Quadro) */
+.pos-post-it {
+  top: 60px;
+  left: 65px;
+}
+
+.post-it-note {
+  background: #FFF9E6;
+  color: #5C4533;
+  padding: 12px 14px;
+  border-radius: 4px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+  transform: rotate(-4deg);
+  width: 140px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  border-left: 3px solid #F5C731;
+}
+
+.post-it-pokeball {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Livros com Eevee */
+.pos-books-eevee {
+  bottom: 25px;
+  left: 55px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.books-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.book {
+  height: 18px;
+  padding: 0 10px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.book-1 { width: 90px; background: #6B4E3D; }
+.book-2 { width: 85px; background: #3B2A4A; }
+.book-3 { width: 92px; background: #5C384D; }
+.book-4 { width: 80px; background: #8B5CF6; }
+
+.eevee-book-mascot {
+  margin-top: -15px;
+  margin-left: 10px;
+}
+
+/* Quadro & Polaroids na Direita */
+.pos-frame-right {
+  top: 55px;
+  right: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.framed-picture {
+  background: #3B261D;
+  border: 3px solid #5C3A2C;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+  transform: rotate(3deg);
+}
+
+.frame-inner {
+  background: #FAF3EC;
+  border-radius: 4px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.polaroid-notes {
+  display: flex;
+  gap: 6px;
+}
+
+.polaroid {
+  background: #FFFFFF;
+  padding: 4px 4px 10px;
+  border-radius: 3px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.polaroid-1 { transform: rotate(-6deg); }
+.polaroid-2 { transform: rotate(5deg); }
+
+/* Pikachu Dormindo no Canto Direito */
+.pos-pikachu-laptop {
+  bottom: 25px;
+  right: 55px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+/* Sparkles nos Vãos */
+.pos-spark-1 { top: 22%; left: 18%; }
+.pos-spark-2 { top: 78%; right: 18%; }
+.pos-spark-3 { bottom: 22%; left: 22%; }
+.pos-spark-4 { top: 25%; right: 22%; }
+
+.spark-star {
+  width: 9px;
+  height: 9px;
+  background: #C499F3;
+  opacity: 0.75;
+  clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+}
+
+@keyframes discoverySpark {
+  0%, 100% { opacity: 0.2; transform: scale(0.6); }
+  50% { opacity: 0.9; transform: scale(1.25); }
+}
+
+.anim-discovery-spark-1 { animation: discoverySpark 3s ease-in-out infinite; }
+.anim-discovery-spark-2 { animation: discoverySpark 4s ease-in-out 1.5s infinite; }
+
+/* ==========================================================================
+   🦊 Eevee Pequeno no Topo do Chat Container
+   ========================================================================== */
+
+.eevee-top-peeking-minimal {
+  position: absolute;
+  top: -35px;
+  right: 48px;
+  z-index: 25;
+  pointer-events: auto;
+  transition: transform 0.25s ease;
+}
+
+.eevee-top-peeking-minimal:hover {
+  transform: translateY(-4px);
+}
+
+/* ==========================================================================
+   🏗️ Painel Central do Chatbot (Tom Marrom Cacau Aconchegante Exato)
+   ========================================================================== */
+
+.app-container {
+  width: 88%;
+  max-width: 930px;
+  height: 85vh;
+  max-height: 780px;
+  display: flex;
+  flex-direction: column;
+  background: #1D141C;
+  border: 2px solid #3B2839;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.55), 0 0 35px rgba(139, 92, 246, 0.2);
+  z-index: 10;
+  position: relative;
+  overflow: visible;
+}
+
+.app-inner-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+/* Header */
+.chat-header {
+  padding: 16px 24px;
+  background: #211720;
+  border-bottom: 1.5px solid #3B2839;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  background: #2E1B2B;
+  border: 1.5px solid #543952;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-star {
+  color: #C499F3;
+  font-size: 16px;
+}
+
+.brand-subtitle {
+  font-size: 12.5px;
+  color: #B69EAF;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Status Badges — Verde Online Sempre */
+.status-pill {
+  background: #2A1F27;
+  border: 1px solid #433140;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10B981 !important;
+  box-shadow: 0 0 10px #10B981 !important;
+  animation: pulseGreen 2s infinite;
+}
+
+@keyframes pulseGreen {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.purple-badge {
+  background: #3B253E;
+  border: 1px solid #5F3964;
+  color: #E4CEF8;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2A1F27;
+  border: 1px solid #433140;
+  color: #D5C3D3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: #3B2A39;
+  border-color: #8B5CF6;
+  color: #FFFFFF;
+}
+
+/* Área de Mensagens */
+.chat-messages {
+  flex: 1;
+  padding: 24px 26px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #181116;
+  scroll-behavior: smooth;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(196, 153, 243, 0.3);
+  border-radius: 4px;
+}
+
+.message-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 85%;
+  animation: fadeInMsg 0.25s ease-out;
+}
+
+.message-row.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message-row.bot {
+  align-self: flex-start;
+}
+
+/* 🟢 Avatares de Mensagem Destacados (Pokébola do Usuário Aumentada e com Brilho Roxo) */
+.msg-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.msg-avatar.user {
+  background: #8B5CF6;
+  border: 1.5px solid #C499F3;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.45);
+}
+
+.msg-avatar.bot {
+  background: #2E1B2B;
+  border: 1.5px solid #543952;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.message-bubble {
+  padding: 15px 18px;
+  border-radius: 18px;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.message-bubble.bot {
+  background: var(--bot-bubble-bg);
+  border: 1.5px solid var(--bot-bubble-border);
+  color: var(--bot-bubble-text);
+  border-top-left-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.message-bubble.user {
+  background: var(--user-bubble-bg);
+  color: var(--user-bubble-text);
+  border-top-right-radius: 4px;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.22);
+}
+
+.message-meta {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #9E8A9A;
+}
+
+.message-source-tag {
+  background: #3B293A;
+  border: 1px solid #543952;
+  color: #C499F3;
+  padding: 2px 9px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.feedback-buttons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.feedback-btn {
+  background: transparent;
+  border: none;
+  color: #9E8A9A;
+  padding: 4px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedback-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.feedback-btn.active-positive { color: #10B981; }
+.feedback-btn.active-negative { color: #EF4444; }
+
+/* 🔴 Chips de Sugestões Rápidas (Sem cortes, Scroll suave + Padding amplo) */
+.quick-actions-container {
+  padding: 12px 24px 14px;
+  background: var(--card-header-bg);
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
+}
+
+.quick-actions-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.quick-actions-container::-webkit-scrollbar-thumb {
+  background: rgba(196, 153, 243, 0.3);
+  border-radius: 4px;
+}
+
+.quick-chip {
+  background: var(--chip-bg);
+  border: 1.5px solid var(--chip-border);
+  color: var(--chip-text);
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+.quick-chip:hover {
+  background: #3B2A39;
+  border-color: #8B5CF6;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(139, 92, 246, 0.25);
+}
+
+/* ⌨️ Barra de Entrada de Texto (Estilo Exato Imagem 2) */
+.chat-input-area {
+  padding: 14px 24px 18px;
+  background: var(--card-header-bg);
+  border-top: 1.5px solid var(--card-border);
+}
+
+.input-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #251C24;
+  border: 1.5px solid #41303E;
+  border-radius: var(--radius-full);
+  padding: 6px 8px 6px 20px;
+  transition: all 0.25s ease;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.input-form:focus-within {
+  border-color: #8B5CF6;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.25), inset 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.text-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  min-width: 0;
+}
+
+.text-input::placeholder { color: #958291; }
+
+.mic-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #382736;
+  border: 1.5px solid #4F384C;
+  color: #D8C7D6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.mic-button:hover:not(:disabled) {
+  background: #4A3447;
+  color: #FFFFFF;
+  border-color: #8B5CF6;
+}
+
+.mic-button.recording {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #EF4444;
+  color: #FFFFFF;
+}
+
+.send-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--accent-purple);
+  border: none;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.send-button:hover:not(:disabled) {
+  background: #7C3AED;
+  transform: scale(1.04);
+}
+
+.send-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Indicador de Digitação */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.typing-indicator span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #C499F3;
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+  .app-container {
+    width: 95%;
+    height: 92vh;
+  }
+
+  .eevee-top-peeking-minimal {
+    right: 20px;
+  }
+}
