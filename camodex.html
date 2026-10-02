@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CamoDex ✦ Assistente IA de Jornada</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons via Unpkg CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ==========================================================================
+       ✨ CamoDex UI/UX Design System — Estilo ChatGPT/Claude com Identidade Pokémon
+       ========================================================================== */
+
+    :root {
+      /* Paleta de Cores Solicitada */
+      --bg-page: #181113;
+      --bg-page-gradient: radial-gradient(circle at 50% 15%, #2a1b28 0%, #181113 70%);
+      
+      /* Card do Chat (Glassmorphism Escuro) */
+      --card-bg: rgba(45, 30, 62, 0.75);
+      --card-border: 1px solid rgba(255, 255, 255, 0.08);
+      --card-box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.08);
+      
+      /* Balões de Mensagem */
+      --bot-bubble-bg: #3a274c;
+      --bot-bubble-border: 1px solid rgba(255, 255, 255, 0.06);
+      --user-bubble-bg: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      
+      /* Cores de Texto e Acento */
+      --text-lavender: #f3e8ff;
+      --text-lavender-muted: #c4b5fd;
+      --text-dark-muted: #94a3b8;
+      --accent-purple: #8b5cf6;
+      --accent-purple-hover: #7c3aed;
+      --status-green: #10b981;
+      
+      /* Tipografia */
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+
+      /* Utilitários */
+      --border-radius-card: 24px;
+      --border-radius-bubble: 18px;
+      --border-radius-input: 28px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-page);
+      background-image: var(--bg-page-gradient);
+      color: var(--text-lavender);
+      font-family: var(--font-body);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    /* Container Principal Centralizado */
+    .app-container {
+      width: 100%;
+      max-width: 900px;
+      height: calc(100vh - 40px);
+      max-height: 850px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: var(--card-border);
+      border-radius: var(--border-radius-card);
+      box-shadow: var(--card-box-shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       📌 CABEÇALHO ELEGANTE
+       ========================================================================== */
+    .chat-header {
+      padding: 18px 24px;
+      background: rgba(30, 19, 43, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mascot-avatar-container {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4c2d66 0%, #2a173d 100%);
+      border: 1.5px solid rgba(139, 92, 246, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .mascot-svg {
+      width: 26px;
+      height: 26px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    .header-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-text h1 span.sparkle {
+      color: var(--accent-purple);
+      font-size: 1.1rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-lavender-muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--status-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--status-green);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-lavender-muted);
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       💬 ÁREA DE MENSAGENS
+       ========================================================================== */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+
+    /* Custom Scrollbar */
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Estilo das Mensagens */
+    .message-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: 85%;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message-row.bot {
+      align-self: flex-start;
+    }
+
+    .message-row.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .avatar-small {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .message-bubble {
+      padding: 14px 18px;
+      border-radius: var(--border-radius-bubble);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      word-break: break-word;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+
+    .message-row.bot .message-bubble {
+      background-color: var(--bot-bubble-bg);
+      border: var(--bot-bubble-border);
+      color: var(--text-lavender);
+      border-top-left-radius: 4px;
+    }
+
+    .message-row.user .message-bubble {
+      background: var(--user-bubble-bg);
+      color: #ffffff;
+      border-top-right-radius: 4px;
+    }
+
+    .message-bubble p {
+      margin-bottom: 8px;
+    }
+
+    .message-bubble p:last-child {
+      margin-bottom: 0;
+    }
+
+    .message-time {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 6px;
+      display: block;
+      text-align: right;
+    }
+
+    /* Efeito Indicador de Digitação (Typing) */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 18px;
+      background: var(--bot-bubble-bg);
+      border: var(--bot-bubble-border);
+      border-radius: var(--border-radius-bubble);
+      border-top-left-radius: 4px;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--text-lavender-muted);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       💡 SUGESTÕES RÁPIDAS (QUICK PROMPTS / CHIPS)
+       ========================================================================== */
+    .quick-prompts-container {
+      padding: 0 24px 12px 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+    }
+
+    .quick-prompts-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .prompt-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: var(--text-lavender-muted);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prompt-chip:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: rgba(139, 92, 246, 0.4);
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       ⌨️ ÁREA DE INPUT INTEGRADA
+       ========================================================================== */
+    .input-area {
+      padding: 16px 24px 20px 24px;
+      background: rgba(24, 15, 34, 0.7);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .input-wrapper {
+      background: rgba(20, 13, 29, 0.95);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--border-radius-input);
+      padding: 6px 8px 6px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2), 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .chat-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 8px 0;
+    }
+
+    .chat-input::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .input-buttons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .mic-btn {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-lavender-muted);
+    }
+
+    .mic-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+    }
+
+    .mic-btn.listening {
+      background: #ef4444;
+      color: #ffffff;
+      animation: pulse-red 1.2s infinite;
+    }
+
+    @keyframes pulse-red {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+      50% { transform: scale(1.08); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+    }
+
+    .send-btn {
+      background: var(--user-bubble-bg);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    }
+
+    .send-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.6);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Footer discreto */
+    .footer-credits {
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 8px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 640px) {
+      body {
+        padding: 0;
+      }
+      .app-container {
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+      .chat-header {
+        padding: 14px 16px;
+      }
+      .chat-messages {
+        padding: 16px;
+      }
+      .message-row {
+        max-width: 92%;
+      }
+      .quick-prompts-container {
+        padding: 0 16px 10px 16px;
+      }
+      .input-area {
+        padding: 12px 16px 16px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- 📌 CABEÇALHO ELEGANTE -->
+    <header class="chat-header">
+      <div class="header-info">
+        <div class="mascot-avatar-container">
+          <!-- Ícone do Mascote Rowlet/Pokédex Sutil -->
+          <svg class="mascot-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 10.45 4.45 9.01 5.22 7.78L10 12.56V15H14V12.56L18.78 7.78C19.55 9.01 20 10.45 20 12C20 16.41 16.41 20 12 20Z" fill="#c4b5fd"/>
+            <circle cx="12" cy="12" r="3" fill="#8b5cf6"/>
+          </svg>
+        </div>
+        <div class="header-text">
+          <h1>CamoDex <span class="sparkle">✨</span></h1>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>Online • Assistente de Jornada</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="icon-btn" id="clearBtn" title="Limpar Conversa">
+          <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 💬 ÁREA DE MENSAGENS -->
+    <main class="chat-messages" id="chatMessages">
+      <!-- Mensagem Boas-vindas Inicial do Bot -->
+      <div class="message-row bot">
+        <div class="avatar-small">
+          <i data-lucide="bot" style="width: 18px; height: 18px; color: #c4b5fd;"></i>
+        </div>
+        <div class="message-bubble">
+          <p>Olá! Seja muito bem-vindo(a) ao <strong>CamoDex</strong> ✨</p>
+          <p style="margin-top: 6px;">Eu sou o seu assistente de jornada inteligente. Como posso ajudar nas suas dúvidas ou estratégias hoje?</p>
+          <span class="message-time">Agora</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- 💡 SUGESTÕES RÁPIDAS (CHIPS) -->
+    <div class="quick-prompts-container" id="quickPrompts">
+      <button class="prompt-chip" onclick="sendQuickPrompt('Quais os melhores tipos de Pokémon?')">
+        <span>💡</span> Quais os melhores tipos de Pokémon?
+      </button>
+      <button class="prompt-chip" onclick="sendQuickPrompt('Como funciona a tabela de fraquezas e vantagens?')">
+        <span>🛡️</span> Vantagens e Fraquezas
+      </button>
+      <button class="prompt-chip" onclick="sendQuickPrompt('O que é o projeto CamoDex?')">
+        <span>⚡</span> O que é o CamoDex?
+      </button>
+      <button class="prompt-chip" onclick="sendQuickPrompt('Dicas para iniciantes na jornada')">
+        <span>🔍</span> Dicas para iniciantes
+      </button>
+    </div>
+
+    <!-- ⌨️ ÁREA DE INPUT INTEGRADA -->
+    <footer class="input-area">
+      <form id="chatForm" onsubmit="handleSend(event)">
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            id="userInput" 
+            class="chat-input" 
+            placeholder="Digite sua mensagem ou escolha uma sugestão..." 
+            autocomplete="off"
+          />
+          <div class="input-buttons">
+            <button type="button" class="action-btn mic-btn" id="micBtn" title="Falar por voz">
+              <i data-lucide="mic" style="width: 18px; height: 18px;"></i>
+            </button>
+            <button type="submit" class="action-btn send-btn" id="sendBtn" title="Enviar mensagem">
+              <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+      <div class="footer-credits">CamoDex ✦ Assistente IA de Suporte e Conhecimento</div>
+    </footer>
+  </div>
+
+  <script>
+    // Inicializa Lucide Icons
+    lucide.createIcons();
+
+    const API_BASE_URL = 'http://127.0.0.1:8000';
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const micBtn = document.getElementById('micBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    let isListening = false;
+    let recognition = null;
+
+    // Respostas Locais Inteligentes de Fallback (Caso o Backend offline)
+    const fallbackResponses = {
+      "melhores tipos": "Os tipos Dragão, Fogo e Elétrico possuem alta cobertura ofensiva. Já o tipo Aço é considerado a melhor defesa do jogo!",
+      "fraquezas": "Vantagens fundamentais:\n• **Água** vence Fogo\n• **Fogo** vence Planta\n• **Planta** vence Água\n• **Elétrico** vence Água e Voador",
+      "camodex": "O **CamoDex** é uma assistente de IA full-stack desenvolvida para fornecer suporte e tirar dúvidas sobre o universo Pokémon com precisão!",
+      "dicas": "Para começar bem:\n1. Monte um time equilibrado com tipos variados.\n2. Tenha pelo menos um suporte para cura e alteração de status."
+    };
+
+    function getTimeString() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function appendMessage(sender, text) {
+      const row = document.createElement('div');
+      row.className = `message-row ${sender}`;
+
+      const avatarHtml = sender === 'bot' 
+        ? `<div class="avatar-small"><i data-lucide="bot" style="width: 18px; height: 18px; color: #c4b5fd;"></i></div>`
+        : `<div class="avatar-small" style="background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4);"><i data-lucide="user" style="width: 18px; height: 18px; color: #fff;"></i></div>`;
+
+      // Formatação básica de texto e negrito
+      const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+      row.innerHTML = `
+        ${avatarHtml}
+        <div class="message-bubble">
+          <p>${formattedText}</p>
+          <span class="message-time">${getTimeString()}</span>
+        </div>
+      `;
+
+      chatMessages.appendChild(row);
+      lucide.createIcons();
+      scrollToBottom();
+    }
+
+    function showTypingIndicator() {
+      const typingRow = document.createElement('div');
+      typingRow.id = 'typingIndicator';
+      typingRow.className = 'message-row bot';
+      typingRow.innerHTML = `
+        <div class="avatar-small"><i data-lucide="bot" style="width: 18px; height: 18px; color: #c4b5fd;"></i></div>
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      `;
+      chatMessages.appendChild(typingRow);
+      lucide.createIcons();
+      scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typingIndicator');
+      if (indicator) indicator.remove();
+    }
+
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function handleSend(e) {
+      if (e) e.preventDefault();
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      // Adiciona mensagem do usuário
+      appendMessage('user', text);
+      userInput.value = '';
+      showTypingIndicator();
+
+      try {
+        // Tenta enviar para a API Backend FastAPI local
+        const response = await fetch(`${API_BASE_URL}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          removeTypingIndicator();
+          appendMessage('bot', data.response || data.message || "Resposta recebida do servidor!");
+        } else {
+          throw new Error('API offline');
+        }
+      } catch (err) {
+        // Fallback local se backend offline
+        setTimeout(() => {
+          removeTypingIndicator();
+          let responseText = "Entendi sua pergunta! Como posso te ajudar mais detalhadamente?";
+          const lower = text.toLowerCase();
+
+          for (const [key, val] of Object.entries(fallbackResponses)) {
+            if (lower.includes(key)) {
+              responseText = val;
+              break;
+            }
+          }
+
+          appendMessage('bot', responseText);
+        }, 800);
+      }
+    }
+
+    function sendQuickPrompt(promptText) {
+      userInput.value = promptText;
+      handleSend();
+    }
+
+    // Botão de Limpar Conversa
+    clearBtn.addEventListener('click', () => {
+      chatMessages.innerHTML = `
+        <div class="message-row bot">
+          <div class="avatar-small"><i data-lucide="bot" style="width: 18px; height: 18px; color: #c4b5fd;"></i></div>
+          <div class="message-bubble">
+            <p>Conversa reiniciada com sucesso! ✨ Como posso ajudar agora?</p>
+            <span class="message-time">${getTimeString()}</span>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    });
+
+    // Reconhecimento de Voz (Web Speech API)
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'pt-BR';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        isListening = true;
+        micBtn.classList.add('listening');
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = transcript;
+        handleSend();
+      };
+
+      recognition.onerror = () => {
+        isListening = false;
+        micBtn.classList.remove('listening');
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        micBtn.classList.remove('listening');
+      };
+
+      micBtn.addEventListener('click', () => {
+        if (isListening) {
+          recognition.stop();
+        } else {
+          recognition.start();
+        }
+      });
+    } else {
+      micBtn.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
