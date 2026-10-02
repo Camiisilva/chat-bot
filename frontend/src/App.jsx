@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import VoiceInput from './components/VoiceInput';
 import FormattedMessage from './components/FormattedMessage';
-import { RowletAvatar, PokeBallIcon } from './components/CozyDecorations';
+import { RowletAvatar, EeveeTopPeekingDecor, PokeBallIcon } from './components/CozyDecorations';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 
@@ -284,6 +284,7 @@ export default function App() {
 
       {/* 🎮 Card Principal do Chatbot */}
       <div className="chat-card" id="chatCard">
+        <EeveeTopPeekingDecor />
         {/* Cabeçalho */}
         <header className="chat-header">
           <div className="header-info">
@@ -332,7 +333,7 @@ export default function App() {
                 {msg.sender === 'user' ? (
                   <PokeBallIcon size={18} />
                 ) : (
-                  <Bot size={18} color="#c4b5fd" />
+                  <RowletAvatar size={24} />
                 )}
               </div>
 
@@ -398,7 +399,7 @@ export default function App() {
           {isLoading && (
             <div className="message-row bot">
               <div className="msg-avatar">
-                <Bot size={18} color="#c4b5fd" />
+                <RowletAvatar size={24} />
               </div>
               <div className="message-bubble">
                 <div className="typing-indicator">
