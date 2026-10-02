@@ -1,8 +1,5 @@
 /**
- * CamoDex ✦ — Aplicação Principal React (Background Pokédex Animado + Perguntas Pokémon)
- * Mascote Oficial Principal: Rowlet
- * Mascote Secundário no Topo: Eevee (Pequeno e Discreto)
- * Paleta: Chocolate Nobre + Bege Suave + Roxo/Lilás
+ * CamoDex ✦ — Aplicação Principal React com GSAP Intro & Design Cozy Gamer
  * Arquivo: frontend/src/App.jsx
  */
 
@@ -16,18 +13,14 @@ import {
   VolumeX, 
   Check, 
   Copy,
-  Sun,
-  Settings,
-  Activity
+  Trash2,
+  PlayCircle,
+  Activity,
+  Bot
 } from 'lucide-react';
 import VoiceInput from './components/VoiceInput';
 import FormattedMessage from './components/FormattedMessage';
-import { 
-  RowletAvatar, 
-  EeveeTopPeekingDecor,
-  PokeBallIcon,
-  PokedexBackground
-} from './components/CozyDecorations';
+import { RowletAvatar, PokeBallIcon } from './components/CozyDecorations';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 
@@ -36,7 +29,7 @@ export default function App() {
     {
       id: 'welcome-msg',
       sender: 'bot',
-      text: 'Olá! Seja muito bem-vindo(a) ao **CamoDex!** ✨\n\nEu sou a sua Pokédex e assistente de jornada inteligente. Como posso ajudar nas suas descobertas hoje?',
+      text: 'Olá! Seja muito bem-vindo(a) ao **CamoDex** ✨\n\nEu sou a sua Pokédex e assistente de jornada inteligente. Como posso ajudar nas suas descobertas hoje?',
       source: 'sistema',
       confidence: 1.0,
       timestamp: Date.now() / 1000,
@@ -51,11 +44,13 @@ export default function App() {
   const [copiedId, setCopiedId] = useState(null);
   const [metrics, setMetrics] = useState(null);
   const [showMetricsModal, setShowMetricsModal] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
-  const [quickSuggestions, setQuickSuggestions] = useState([
-    'Como buscar dados de Pokémon no CamoDex?',
-    'Como funciona o registro de voz e Pokédex por IA?',
-    'Quem é o mascote Rowlet e quais são seus atributos?'
+  const [quickSuggestions] = useState([
+    'Quais os melhores tipos de Pokémon?',
+    'Como funciona a tabela de vantagens e fraquezas?',
+    'O que é o assistente CamoDex?',
+    'Dicas para novos treinadores'
   ]);
 
   const messagesEndRef = useRef(null);
@@ -68,6 +63,44 @@ export default function App() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
+
+  // Executa Animação GSAP Intro se disponível
+  useEffect(() => {
+    if (showIntro && window.gsap) {
+      const gsap = window.gsap;
+      const tl = gsap.timeline({
+        onComplete: () => {
+          gsap.to('#introOverlay', {
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power2.inOut',
+            onComplete: () => setShowIntro(false)
+          });
+        }
+      });
+
+      tl.fromTo('#introPokeball',
+        { y: -500, rotation: -720, opacity: 0 },
+        { y: 0, rotation: 0, opacity: 1, duration: 1.2, ease: 'bounce.out' }
+      );
+
+      tl.to('#introPokeball', { rotation: -12, duration: 0.1, ease: 'power1.inOut' })
+        .to('#introPokeball', { rotation: 12, duration: 0.1, ease: 'power1.inOut' })
+        .to('#introPokeball', { rotation: -12, duration: 0.1, ease: 'power1.inOut' })
+        .to('#introPokeball', { rotation: 12, duration: 0.1, ease: 'power1.inOut' })
+        .to('#introPokeball', { rotation: 0, duration: 0.1, ease: 'power1.inOut' });
+
+      tl.fromTo('#introLogo',
+        { scale: 0, opacity: 0, y: 15 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.7, ease: 'back.out(1.7)' },
+        "-=0.1"
+      );
+
+      tl.to({}, { duration: 0.9 });
+    } else {
+      setShowIntro(false);
+    }
+  }, [showIntro]);
 
   useEffect(() => {
     checkApiHealth();
@@ -99,113 +132,101 @@ export default function App() {
     } catch (e) {}
   };
 
-  const handleSendMessage = async (textToSend) => {
-    const text = (textToSend || inputMessage).trim();
-    if (!text || isLoading) return;
+  const handleSendMessage = async (customText = null) => {
+    const textToSend = customText || inputMessage;
+    if (!textToSend.trim() || isLoading) return;
 
-    const userMessage = {
+    const userMsg = {
       id: `user-${Date.now()}`,
       sender: 'user',
-      text: text,
+      text: textToSend.trim(),
       timestamp: Date.now() / 1000
     };
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInputMessage('');
+    setMessages((prev) => [...prev, userMsg]);
+    if (!customText) setInputMessage('');
     setIsLoading(true);
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: textToSend.trim() })
       });
 
-      if (!response.ok) throw new Error('Falha na resposta da API');
+      if (!response.ok) throw new Error('Falha na resposta do servidor');
 
       const data = await response.json();
-
-      const botMessage = {
-        id: data.message_id || `bot-${Date.now()}`,
+      const botMsg = {
+        id: `bot-${Date.now()}`,
         sender: 'bot',
-        text: data.reply,
-        source: data.source || 'ia',
-        confidence: data.confidence || 0.9,
-        timestamp: data.timestamp || Date.now() / 1000,
-        feedback: null
-      };
-
-      setMessages((prev) => [...prev, botMessage]);
-
-      if (data.suggested_actions && data.suggested_actions.length > 0) {
-        setQuickSuggestions(data.suggested_actions);
-      }
-    } catch (error) {
-      console.error('Erro ao enviar mensagem:', error);
-      const errorMessage = {
-        id: `err-${Date.now()}`,
-        sender: 'bot',
-        text: '⚠️ **Não foi possível conectar ao backend.** Verifique se o servidor está ativo na porta 8000.',
-        source: 'erro',
-        confidence: 0.0,
+        text: data.response || data.message || 'Resposta recebida.',
+        source: data.fonte || 'groq_llm',
+        confidence: data.confianca || 0.9,
         timestamp: Date.now() / 1000,
         feedback: null
       };
-      setMessages((prev) => [...prev, errorMessage]);
-      setApiOnline(false);
+
+      setMessages((prev) => [...prev, botMsg]);
+    } catch (error) {
+      setTimeout(() => {
+        let fallbackText = "Entendi sua pergunta! Como posso te ajudar mais detalhadamente?";
+        const lower = textToSend.toLowerCase();
+        if (lower.includes('tipo') || lower.includes('melhor')) {
+          fallbackText = "Os tipos **Dragão**, **Fogo** e **Elétrico** possuem excelente ataque. O tipo **Aço** tem as melhores defesas!";
+        } else if (lower.includes('vantag') || lower.includes('fraqu')) {
+          fallbackText = "Vantagens essenciais:\n• **Água** vence Fogo\n• **Fogo** vence Planta\n• **Planta** vence Água\n• **Elétrico** vence Água";
+        } else if (lower.includes('camo')) {
+          fallbackText = "O **CamoDex** é a sua assistente Pokédex inteligente criada para dar suporte sobre o universo Pokémon!";
+        }
+
+        const fallbackMsg = {
+          id: `bot-${Date.now()}`,
+          sender: 'bot',
+          text: fallbackText,
+          source: 'offline_fallback',
+          confidence: 0.85,
+          timestamp: Date.now() / 1000,
+          feedback: null
+        };
+        setMessages((prev) => [...prev, fallbackMsg]);
+      }, 600);
     } finally {
       setIsLoading(false);
-      setTimeout(() => inputRef.current?.focus(), 100);
     }
   };
 
   const handleVoiceTranscript = (transcript) => {
-    if (transcript) {
-      setInputMessage(transcript);
-      handleSendMessage(transcript);
-    }
+    if (transcript) handleSendMessage(transcript);
   };
 
-  const handleFeedback = async (messageId, isPositive) => {
-    try {
-      await fetch(`${API_BASE_URL}/api/feedback`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message_id: messageId, is_positive: isPositive })
-      });
-
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === messageId
-            ? { ...msg, feedback: isPositive ? 'positive' : 'negative' }
-            : msg
-        )
-      );
-
-      fetchMetrics();
-    } catch (e) {
-      console.error('Erro ao enviar feedback:', e);
-    }
+  const resetChat = () => {
+    setMessages([
+      {
+        id: `welcome-${Date.now()}`,
+        sender: 'bot',
+        text: 'Conversa reiniciada com sucesso! ✨ Como posso ajudar agora?',
+        source: 'sistema',
+        confidence: 1.0,
+        timestamp: Date.now() / 1000,
+        feedback: null
+      }
+    ]);
   };
 
   const speakText = (text) => {
     if (!('speechSynthesis' in window)) return;
-
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
       return;
     }
-
-    const cleanText = text.replace(/[*_#`~>[\]]/g, '').replace(/<[^>]*>?/gm, '');
+    const cleanText = text.replace(/[*#_`]/g, '');
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.lang = 'pt-BR';
-    utterance.rate = 1.05;
-
-    utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
-
+    setIsSpeaking(true);
     window.speechSynthesis.speak(utterance);
   };
 
@@ -215,222 +236,234 @@ export default function App() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const resetChat = () => {
-    setMessages([
-      {
-        id: `welcome-${Date.now()}`,
-        sender: 'bot',
-        text: 'Olá! Seja muito bem-vindo(a) ao **CamoDex!** ✨\n\nEu sou a sua Pokédex e assistente de jornada inteligente. Como posso ajudar nas suas descobertas hoje?',
-        source: 'sistema',
-        confidence: 1.0,
-        timestamp: Date.now() / 1000,
-        feedback: null
-      }
-    ]);
+  const handleFeedback = async (messageId, isPositive) => {
+    const targetMsg = messages.find((m) => m.id === messageId);
+    if (!targetMsg) return;
+    const newFeedback = isPositive ? 'positive' : 'negative';
+
+    setMessages((prev) =>
+      prev.map((msg) => (msg.id === messageId ? { ...msg, feedback: newFeedback } : msg))
+    );
+
+    try {
+      await fetch(`${API_BASE_URL}/api/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message_id: messageId,
+          user_query: 'feedback',
+          bot_response: targetMsg.text,
+          is_positive: isPositive
+        })
+      });
+      fetchMetrics();
+    } catch (e) {}
   };
 
   return (
     <>
-      {/* 🌀 Camada Decorativa de Background Pokédex (Com Animações Sutis) */}
-      <PokedexBackground />
+      {/* 🎬 Overlay Intro GSAP */}
+      {showIntro && (
+        <div class="intro-overlay" id="introOverlay">
+          <div class="pokeball-css" id="introPokeball">
+            <div class="pokeball-top" />
+            <div class="pokeball-button" />
+          </div>
+          <div class="intro-logo" id="introLogo">
+            <h1>CamoDex ✦</h1>
+            <p>Sua Pokédex Inteligente</p>
+          </div>
+          <button
+            className="skip-btn"
+            onClick={() => setShowIntro(false)}
+          >
+            Pular Animação ➔
+          </button>
+        </div>
+      )}
 
-      {/* 📦 Painel Central do Chatbot (Chocolate Nobre & Limpo) */}
-      <div className="app-container">
-        {/* 🦊 Eevee Pequeno Debruçado no Topo do Chat */}
-        <EeveeTopPeekingDecor />
-
-        <div className="app-inner-wrapper">
-          {/* 1. Header do Chatbot (CamoDex ✦) */}
-          <header className="chat-header">
-            <div className="header-brand">
-              <div className="brand-icon-wrapper" title="Rowlet — Mascote oficial do CamoDex">
-                <RowletAvatar size={34} />
-              </div>
-              <div className="brand-title-group">
-                <div className="brand-name">
-                  CamoDex <span className="brand-star">✦</span>
-                </div>
-                <div className="brand-subtitle">
-                  Seu parceiro de jornada
-                </div>
-              </div>
+      {/* 🎮 Card Principal do Chatbot */}
+      <div className="chat-card" id="chatCard">
+        {/* Cabeçalho */}
+        <header className="chat-header">
+          <div className="header-info">
+            <div className="mascot-avatar">
+              <RowletAvatar size={26} />
             </div>
-
-            <div className="header-actions">
-              {/* Status Online */}
-              <div className="status-pill">
-                <div className="status-dot online" />
-                <span>Online</span>
-              </div>
-
-              {/* Badge IA Conectada */}
-              <div className="purple-badge">
-                IA Conectada
-              </div>
-
-              {/* Botão Tema / Alternar */}
-              <button className="icon-btn" onClick={resetChat} title="Alternar Modo / Reiniciar">
-                <Sun size={15} />
-              </button>
-
-              {/* Botão Configurações / Métricas */}
-              <button
-                className="icon-btn"
-                onClick={() => setShowMetricsModal(!showMetricsModal)}
-                title="Configurações e Métricas"
-              >
-                <Settings size={15} />
-              </button>
+            <div className="header-text">
+              <h2>CamoDex ✦</h2>
+              <p>
+                <span className="status-dot" />
+                <span>Online • Seu parceiro de jornada</span>
+              </p>
             </div>
-          </header>
+          </div>
 
-          {/* 2. Área de Mensagens */}
-          <main className="chat-messages">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`message-row ${msg.sender}`}>
-                <div className={`msg-avatar ${msg.sender}`}>
-                  {msg.sender === 'user' ? (
-                    <PokeBallIcon size={26} />
-                  ) : (
-                    <PokeBallIcon size={26} />
-                  )}
-                </div>
+          <div className="header-actions">
+            <button
+              className="icon-btn"
+              onClick={() => setShowIntro(true)}
+              title="Reexibir Intro GSAP"
+            >
+              <PlayCircle size={18} />
+            </button>
+            <button
+              className="icon-btn"
+              onClick={resetChat}
+              title="Limpar Conversa"
+            >
+              <Trash2 size={18} />
+            </button>
+            <button
+              className="icon-btn"
+              onClick={() => setShowMetricsModal(!showMetricsModal)}
+              title="Métricas Operacionais"
+            >
+              <Activity size={18} />
+            </button>
+          </div>
+        </header>
 
-                <div className={`message-bubble ${msg.sender}`}>
-                  {/* Conteúdo Markdown */}
-                  <FormattedMessage content={msg.text} />
+        {/* Área de Mensagens */}
+        <main className="chat-messages">
+          {messages.map((msg) => (
+            <div key={msg.id} className={`message-row ${msg.sender}`}>
+              <div className="msg-avatar">
+                {msg.sender === 'user' ? (
+                  <PokeBallIcon size={18} />
+                ) : (
+                  <Bot size={18} color="#c4b5fd" />
+                )}
+              </div>
 
-                  {/* Metadados e Ações para a mensagem do Bot */}
-                  {msg.sender === 'bot' && (
-                    <div className="message-meta">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        {msg.source && (
-                          <span className="message-source-tag">
-                            <Sparkles size={11} />
-                            {msg.source === 'sistema' ? 'Sistema' : msg.source.replace('_', ' ')}
-                          </span>
-                        )}
-                        <span>
-                          {new Date(msg.timestamp * 1000).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
+              <div className="message-bubble">
+                <FormattedMessage content={msg.text} />
+
+                {msg.sender === 'bot' && (
+                  <div className="message-meta">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {msg.source && (
+                        <span className="message-source-tag">
+                          <Sparkles size={11} />
+                          {msg.source === 'sistema' ? 'Sistema' : msg.source.replace('_', ' ')}
                         </span>
-                      </div>
-
-                      <div className="feedback-buttons">
-                        {/* Ouvir Voz */}
-                        <button
-                          className="feedback-btn"
-                          onClick={() => speakText(msg.text)}
-                          title="Ouvir em voz alta"
-                        >
-                          {isSpeaking ? <VolumeX size={14} color="#EF4444" /> : <Volume2 size={14} />}
-                        </button>
-
-                        {/* Copiar */}
-                        <button
-                          className="feedback-btn"
-                          onClick={() => copyToClipboard(msg.text, msg.id)}
-                          title="Copiar texto"
-                        >
-                          {copiedId === msg.id ? <Check size={14} color="#10B981" /> : <Copy size={14} />}
-                        </button>
-
-                        {/* Like */}
-                        <button
-                          className={`feedback-btn ${msg.feedback === 'positive' ? 'active-positive' : ''}`}
-                          onClick={() => handleFeedback(msg.id, true)}
-                          title="Gostei da resposta (Like)"
-                        >
-                          <ThumbsUp size={14} />
-                        </button>
-
-                        {/* Dislike */}
-                        <button
-                          className={`feedback-btn ${msg.feedback === 'negative' ? 'active-negative' : ''}`}
-                          onClick={() => handleFeedback(msg.id, false)}
-                          title="Não gostei (Dislike)"
-                        >
-                          <ThumbsDown size={14} />
-                        </button>
-                      </div>
+                      )}
+                      <span>
+                        {new Date(msg.timestamp * 1000).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
 
-            {/* Digitando... */}
-            {isLoading && (
-              <div className="message-row bot">
-                <div className="msg-avatar">
-                  <PokeBallIcon size={20} />
-                </div>
-                <div className="message-bubble bot">
-                  <div className="typing-indicator">
-                    <span />
-                    <span />
-                    <span />
+                    <div className="feedback-buttons">
+                      <button
+                        className="feedback-btn"
+                        onClick={() => speakText(msg.text)}
+                        title="Ouvir em voz alta"
+                      >
+                        {isSpeaking ? <VolumeX size={14} color="#EF4444" /> : <Volume2 size={14} />}
+                      </button>
+
+                      <button
+                        className="feedback-btn"
+                        onClick={() => copyToClipboard(msg.text, msg.id)}
+                        title="Copiar texto"
+                      >
+                        {copiedId === msg.id ? <Check size={14} color="#10B981" /> : <Copy size={14} />}
+                      </button>
+
+                      <button
+                        className={`feedback-btn ${msg.feedback === 'positive' ? 'active-positive' : ''}`}
+                        onClick={() => handleFeedback(msg.id, true)}
+                        title="Gostei"
+                      >
+                        <ThumbsUp size={14} />
+                      </button>
+
+                      <button
+                        className={`feedback-btn ${msg.feedback === 'negative' ? 'active-negative' : ''}`}
+                        onClick={() => handleFeedback(msg.id, false)}
+                        title="Não gostei"
+                      >
+                        <ThumbsDown size={14} />
+                      </button>
+                    </div>
                   </div>
+                )}
+              </div>
+            </div>
+          ))}
+
+          {isLoading && (
+            <div className="message-row bot">
+              <div className="msg-avatar">
+                <Bot size={18} color="#c4b5fd" />
+              </div>
+              <div className="message-bubble">
+                <div className="typing-indicator">
+                  <span />
+                  <span />
+                  <span />
                 </div>
               </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </main>
-
-          {/* 3. Chips de Perguntas Rápidas Pokémon */}
-          {quickSuggestions.length > 0 && (
-            <div className="quick-actions-container">
-              {quickSuggestions.map((suggestion, index) => (
-                <button
-                  key={index}
-                  className="quick-chip"
-                  onClick={() => handleSendMessage(suggestion)}
-                  disabled={isLoading}
-                >
-                  <PokeBallIcon size={15} />
-                  <span>{suggestion}</span>
-                </button>
-              ))}
             </div>
           )}
 
-          {/* 4. Barra de Entrada & Microfone */}
-          <footer className="chat-input-area">
-            <form
-              className="input-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendMessage();
-              }}
-            >
-              <input
-                ref={inputRef}
-                type="text"
-                className="text-input"
-                placeholder="Digite sua dúvida ou use o microfone..."
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                disabled={isLoading}
-              />
+          <div ref={messagesEndRef} />
+        </main>
 
-              {/* Entrada por Voz */}
+        {/* 💡 Quick Suggestions Chips */}
+        {quickSuggestions.length > 0 && (
+          <div className="quick-prompts-container">
+            {quickSuggestions.map((suggestion, index) => (
+              <button
+                key={index}
+                className="prompt-chip"
+                onClick={() => handleSendMessage(suggestion)}
+                disabled={isLoading}
+              >
+                <span className="chip-pokeball-icon" />
+                <span>{suggestion}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* ⌨️ Input Bar */}
+        <footer className="input-area">
+          <form
+            className="input-wrapper"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendMessage();
+            }}
+          >
+            <input
+              ref={inputRef}
+              type="text"
+              className="chat-input"
+              placeholder="Digite sua dúvida ou use o microfone..."
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              disabled={isLoading}
+            />
+
+            <div className="input-buttons">
               <VoiceInput onTranscript={handleVoiceTranscript} disabled={isLoading} />
 
-              {/* Botão de Envio Roxo */}
               <button
                 type="submit"
-                className="send-button"
+                className="send-btn"
                 disabled={!inputMessage.trim() || isLoading}
                 title="Enviar mensagem"
               >
                 <Send size={18} />
               </button>
-            </form>
-          </footer>
-        </div>
+            </div>
+          </form>
+          <div className="footer-credits">CamoDex ✦ Assistente IA de Suporte e Conhecimento</div>
+        </footer>
 
         {/* Modal de Métricas */}
         {showMetricsModal && metrics && (
@@ -439,8 +472,8 @@ export default function App() {
               position: 'absolute',
               top: '70px',
               right: '20px',
-              backgroundColor: '#251C24',
-              border: '1.5px solid #483444',
+              backgroundColor: '#2b1b3d',
+              border: '1.5px solid rgba(196, 181, 253, 0.3)',
               borderRadius: '16px',
               padding: '16px',
               boxShadow: '0 12px 35px rgba(0, 0, 0, 0.5)',
@@ -454,12 +487,12 @@ export default function App() {
               </strong>
               <button
                 onClick={() => setShowMetricsModal(false)}
-                style={{ background: 'none', border: 'none', color: '#958291', cursor: 'pointer', fontSize: '1rem' }}
+                style={{ background: 'none', border: 'none', color: '#c4b5fd', cursor: 'pointer', fontSize: '1rem' }}
               >
                 ✕
               </button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem', color: '#E2CEF7' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem', color: '#f3e8ff' }}>
               <div>Total de Atendimentos: <strong>{metrics.total_atendimentos}</strong></div>
               <div>Taxa de Satisfação: <strong>{metrics.taxa_satisfacao_percentual}%</strong></div>
               <div>Likes (Positivos): <strong>{metrics.detalhes?.feedback_positivo || 0}</strong></div>
